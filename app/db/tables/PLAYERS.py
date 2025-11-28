@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from .base import Base
 
 class Players(Base):
     __tablename__ = 'players'
@@ -14,7 +14,7 @@ class Players(Base):
     contact_id = Column(Integer, ForeignKey('contacts.id'))
     contact = relationship("Contacts", back_populates="player") 
 
-    address_id = Column(Integer, ForeignKey('adresses.id'))
+    address_id = Column(Integer, ForeignKey('addresses.id'))
     address = relationship("Addresses", back_populates="player")
 
     # relation 0-N

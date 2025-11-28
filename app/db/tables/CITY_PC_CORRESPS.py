@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from .base import Base
 
 class City_pc_corresps(Base):
     __tablename__ = 'city_pc_corresps'

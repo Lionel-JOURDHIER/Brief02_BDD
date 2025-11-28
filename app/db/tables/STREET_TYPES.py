@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from .base import Base
 
 class Street_types(Base):
     __tablename__ = 'street_types'

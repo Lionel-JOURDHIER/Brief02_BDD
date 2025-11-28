@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from .base import Base
 
 class Addresses(Base):
     __tablename__ = 'addresses'
@@ -13,7 +13,7 @@ class Addresses(Base):
     street_type_id = Column(Integer, ForeignKey('street_types.id'))
     street_type = relationship("Street_types", back_populates="address") 
 
-    postal_code_id = Column(Integer, ForeignKey('adresses.id'))
+    postal_code_id = Column(Integer, ForeignKey('postal_codes.id'))
     postal_code = relationship("Postal_codes", back_populates="address")
 
     # relation 0-N

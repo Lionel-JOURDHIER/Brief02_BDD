@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from .base import Base
 
 class Release_years(Base):
     __tablename__ = 'release_years'

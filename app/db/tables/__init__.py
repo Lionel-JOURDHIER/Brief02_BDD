@@ -1,4 +1,5 @@
-from .ADRESSES import Addresses
+from .base import Base
+from .ADDRESSES import Addresses
 from .CITIES import Cities
 from .CITY_PC_CORRESPS import City_pc_corresps
 from .CONTACTS import Contacts
@@ -14,6 +15,7 @@ from .REVIEWS import Reviews
 from .STREET_TYPES import Street_types
 
 __all__ =[
+    "Base",
     "Addresses",
     "Cities",
     "City_pc_corresps",

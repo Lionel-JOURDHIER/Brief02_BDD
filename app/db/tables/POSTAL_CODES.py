@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from .base import Base
 
 class Postal_codes(Base):
     __tablename__ = 'postal_codes'

@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.db.base import Base
+from tables.base import Base
+import tables
 
 # 1. Connexion à une base de données SQLite :
 # L'argument 'sqlite:///ma_base_clients.db' crée un fichier 'ma_base_clients.db' 
