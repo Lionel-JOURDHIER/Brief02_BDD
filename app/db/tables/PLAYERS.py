@@ -18,4 +18,4 @@ class Players(Base):
     address = relationship("Addresses", back_populates="player")
 
     # relation 0-N
-    review = relationship("Reviews", back_populates="player")  
+    review = relationship("Reviews", back_populates="player") 
