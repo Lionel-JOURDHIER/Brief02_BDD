@@ -1,0 +1,18 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app.db.base import Base
+
+# 1. Connexion à une base de données SQLite :
+# L'argument 'sqlite:///ma_base_clients.db' crée un fichier 'ma_base_clients.db' 
+# dans le répertoire courant s'il n'existe pas.
+engine = create_engine("sqlite:///ma_base_clients.db", echo=True)
+
+# 2. Création des tables dans la base de données
+# Cette ligne regarde toutes les classes qui héritent de Base (Client, Commande) 
+# et crée les tables SQL correspondantes (si elles n'existent pas déjà).
+Base.metadata.create_all(engine)
+
+# 3. Configuration de la session :
+# Lie la session à notre moteur (engine) pour pouvoir interagir avec la BDD.
+Session = sessionmaker(bind=engine)
+session = Session()
