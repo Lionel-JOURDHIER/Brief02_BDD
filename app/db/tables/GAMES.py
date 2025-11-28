@@ -15,16 +15,16 @@ class Games(Base):
     
     # clé étrangère Release_years
     release_year_id = Column(Integer, ForeignKey('release_years.id'))
-    release_year = relationship("Release_years", back_populates="games") 
+    release_year = relationship("Release_years", back_populates="game") 
 
     publisher_id = Column(Integer, ForeignKey('publishers.id'))
-    publisher = relationship("Publisher", back_populates="games")
+    publisher = relationship("Publisher", back_populates="game")
 
     plateform_id = Column(Integer, ForeignKey('plateforms.id'))
-    plateform = relationship("Plateform", back_populates="games")  
+    plateform = relationship("Plateform", back_populates="game")  
 
     genre_id = Column(Integer, ForeignKey('genres.id'))  
-    genre = relationship("Genres", back_populates="games")
+    genre = relationship("Genres", back_populates="game")
 
     # relation 0-N
-    reviews = relationship("Reviews", back_populates="games")  
+    reviews = relationship("Reviews", back_populates="game")  
