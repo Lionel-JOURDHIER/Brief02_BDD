@@ -1,3 +1,4 @@
+import uuid
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from .base import Base
@@ -5,9 +6,17 @@ from .base import Base
 class Players(Base):
     __tablename__ = 'players'
     # clé primaire
-    id = Column(Integer, primary_key=True, autoincrement=True)  
-    first_name = Column(String)
-    last_name = Column(String)
+    id = Column(Integer, primary_key=True, autoincrement=True) 
+
+    uuid = Column(
+        String(36),
+        unique=True,
+        nullable=False,
+        default=lambda: str(uuid.uuid4())
+    )
+
+    first_name = Column(String(50))
+    last_name = Column(String(50))
     creation_date = Column(Date)
     
     # clé étrangères
