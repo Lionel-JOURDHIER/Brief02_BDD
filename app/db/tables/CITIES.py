@@ -5,7 +5,7 @@ from .base import Base
 class Cities(Base):
     __tablename__ = 'cities'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     city_name = Column(String)
    
     # clé étrangère

@@ -5,7 +5,7 @@ from .base import Base
 class Release_years(Base):
     __tablename__ = 'release_years'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     release_year = Column(String)
    
     # relation 0-N

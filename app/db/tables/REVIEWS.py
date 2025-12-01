@@ -5,7 +5,7 @@ from .base import Base
 class Reviews(Base):
     __tablename__ = 'reviews'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     review_score = Column(Integer)
    
     # clé étrangère

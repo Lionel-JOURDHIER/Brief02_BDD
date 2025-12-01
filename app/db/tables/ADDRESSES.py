@@ -5,7 +5,7 @@ from .base import Base
 class Addresses(Base):
     __tablename__ = 'addresses'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     address_number = Column(String)
     street_name = Column(String)
     

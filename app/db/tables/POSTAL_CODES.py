@@ -5,7 +5,7 @@ from .base import Base
 class Postal_codes(Base):
     __tablename__ = 'postal_codes'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     postal_code_value = Column(String)
    
     # relation 0-N

@@ -5,7 +5,7 @@ from .base import Base
 class City_pc_corresps(Base):
     __tablename__ = 'city_pc_corresps'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
    
     # clé étrangère
     postal_code_id = Column(Integer, ForeignKey('postal_codes.id'))

@@ -5,7 +5,7 @@ from .base import Base
 class Genres(Base):
     __tablename__ = 'genres'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     genre_name = Column(String)
    
     # relation 0-N

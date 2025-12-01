@@ -5,7 +5,7 @@ from .base import Base
 class Contacts(Base):
     __tablename__ = 'contacts'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     email = Column(String)
     mobile_phone = Column(String)
    

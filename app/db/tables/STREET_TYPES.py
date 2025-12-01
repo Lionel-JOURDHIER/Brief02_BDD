@@ -5,7 +5,7 @@ from .base import Base
 class Street_types(Base):
     __tablename__ = 'street_types'
     # clé primaire
-    id = Column(Integer, primary_key=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True)  
     street_type_name = Column(String)
    
     # relation 0-N
