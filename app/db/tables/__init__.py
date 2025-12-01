@@ -10,8 +10,10 @@ from .PLATEFORMS import Plateforms
 from .PLAYERS import Players
 from .POSTAL_CODES import Postal_codes
 from .PUBLISHERS import Publishers
+from .REGIONS import Regions
 from .RELEASE_YEARS import Release_years
 from .REVIEWS import Reviews
+from .SALES import Sales
 from .STREET_TYPES import Street_types
 
 __all__ =[
@@ -27,7 +29,9 @@ __all__ =[
     "Players",
     "Postal_codes",
     "Publishers",
+    "Regions",
     "Release_years",
     "Reviews",
+    "Sales",
     "Street_types"
 ]

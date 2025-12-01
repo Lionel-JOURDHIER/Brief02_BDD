@@ -8,7 +8,7 @@ class Sales(Base):
     sales = Column(Float(precision=2))
     
     # clé étrangères
-    game_id = Column(Integer, ForeignKey('game.id'))
+    game_id = Column(Integer, ForeignKey('games.id'))
     game = relationship("Games", back_populates="sale") 
 
     region_id = Column(Integer, ForeignKey('regions.id'))
@@ -16,5 +16,5 @@ class Sales(Base):
 
     # clé primaire à deux arguments
     __table_args__ = (
-    PrimaryKeyConstraint('id_game', 'region', name='pk_sales'),
+    PrimaryKeyConstraint('game_id', 'region_id', name='pk_sales'),
 )
