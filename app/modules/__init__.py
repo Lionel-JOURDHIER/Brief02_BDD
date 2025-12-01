@@ -1,3 +1,5 @@
-"""
-Modules package containing all utilities.
-"""
+from .encrypt import EncryptedString
+
+__all__ =[
+    "EncryptedString"
+]
