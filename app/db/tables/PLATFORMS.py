@@ -2,11 +2,11 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from .base import Base
 
-class Plateforms(Base):
-    __tablename__ = 'plateforms'
+class Platforms(Base):
+    __tablename__ = 'platforms'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-    plateform_name = Column(String)
+    platform_name = Column(String)
    
     # relation 0-N
-    game = relationship("Games", back_populates="plateform")  
+    games = relationship("Games", back_populates="platform")  

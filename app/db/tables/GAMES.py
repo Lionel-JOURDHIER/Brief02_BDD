@@ -6,6 +6,7 @@ class Games(Base):
     __tablename__ = 'games'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
+    rank_game = Column(Integer)
     game_name = Column(String)
     NA_sales = Column(Float(precision=2))
     EU_sales = Column(Float(precision=2))
@@ -14,19 +15,19 @@ class Games(Base):
     global_sales =Column(Float(precision=2))
     
     # clé étrangères
-    release_year_id = Column(Integer, ForeignKey('release_years.id'))
-    release_year = relationship("Release_years", back_populates="game") 
+    release_year_id = Column(Integer, ForeignKey('release_years.id'), nullable=True)
+    release_year = relationship("Release_years", back_populates="games") 
 
-    publisher_id = Column(Integer, ForeignKey('publishers.id'))
-    publisher = relationship("Publishers", back_populates="game")
+    publisher_id = Column(Integer, ForeignKey('publishers.id'), nullable=True)
+    publisher = relationship("Publishers", back_populates="games")
 
-    plateform_id = Column(Integer, ForeignKey('plateforms.id'))
-    plateform = relationship("Plateforms", back_populates="game")  
+    platform_id = Column(Integer, ForeignKey('platforms.id'), nullable=True)
+    platform = relationship("Platforms", back_populates="games")  
 
-    genre_id = Column(Integer, ForeignKey('genres.id'))  
-    genre = relationship("Genres", back_populates="game")
+    genre_id = Column(Integer, ForeignKey('genres.id'), nullable=True)  
+    genre = relationship("Genres", back_populates="games")
 
     # relation 0-N
-    review = relationship("Reviews", back_populates="game")  
+    reviews = relationship("Reviews", back_populates="game")  
 
-    sale = relationship("Sales", back_populates="game")
+

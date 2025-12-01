@@ -9,4 +9,4 @@ class Release_years(Base):
     release_year = Column(String)
    
     # relation 0-N
-    game = relationship("Games", back_populates="release_year")  
+    games = relationship("Games", back_populates="release_year")  

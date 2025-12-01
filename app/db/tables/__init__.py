@@ -1,37 +1,37 @@
 from .base import Base
-from .ADDRESSES import Addresses
-from .CITIES import Cities
-from .CITY_PC_CORRESPS import City_pc_corresps
-from .CONTACTS import Contacts
 from .COUNTRIES import Countries
-from .GAMES import Games
-from .GENRES import Genres
-from .PLATEFORMS import Plateforms
-from .PLAYERS import Players
+from .CITIES import Cities
 from .POSTAL_CODES import Postal_codes
+from .STREET_TYPES import Street_types
+from .ADDRESSES import Addresses
+from .CONTACTS import Contacts
+from .PLAYERS import Players
 from .PUBLISHERS import Publishers
-from .REGIONS import Regions
+from .PLATFORMS import Platforms
+from .GENRES import Genres
 from .RELEASE_YEARS import Release_years
 from .REVIEWS import Reviews
-from .SALES import Sales
-from .STREET_TYPES import Street_types
+from .GAMES import Games
+from .CITY_PC_CORRESPS import City_pc_corresps
+
+
 
 __all__ =[
     "Base",
-    "Addresses",
-    "Cities",
-    "City_pc_corresps",
-    "Contacts",
     "Countries",
-    "Games",
-    "Genres",
-    "Plateforms",
-    "Players",
+    "Cities",
     "Postal_codes",
+    "Street_types",
+    "Addresses",
+    "Contacts",
+    "Players",
     "Publishers",
-    "Regions",
+    "Platforms",
+    "Genres",
     "Release_years",
+    "Games",
     "Reviews",
+    "Regions",
     "Sales",
-    "Street_types"
+    "City_pc_corresps",
 ]

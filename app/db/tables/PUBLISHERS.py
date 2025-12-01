@@ -9,4 +9,4 @@ class Publishers(Base):
     publisher_name = Column(String)
    
     # relation 0-N
-    game = relationship("Games", back_populates="publisher")  
+    games = relationship("Games", back_populates="publisher")  

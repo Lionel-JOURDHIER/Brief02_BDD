@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from .base import Base
 
+
 class Genres(Base):
     __tablename__ = 'genres'
     # clé primaire
@@ -9,4 +10,4 @@ class Genres(Base):
     genre_name = Column(String)
    
     # relation 0-N
-    game = relationship("Games", back_populates="genre")  
+    games = relationship("Games", back_populates="genre")  

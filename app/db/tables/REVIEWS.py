@@ -9,8 +9,8 @@ class Reviews(Base):
     review_score = Column(Integer)
    
     # clé étrangère
-    game_id = Column(Integer, ForeignKey('games.id'))
-    game = relationship("Games", back_populates="review") 
+    game_id = Column(Integer, ForeignKey('games.id'), nullable=True)
+    game = relationship("Games", back_populates="reviews") 
 
-    player_id = Column(Integer, ForeignKey('publishers.id'))
-    player = relationship("Players", back_populates="review")
+    player_id = Column(Integer, ForeignKey('players.id'), nullable=True)
+    player = relationship("Players", back_populates="reviews")
