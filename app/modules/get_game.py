@@ -7,7 +7,8 @@ def get_genre_id(name):
     """
     Retrieve the ID of a genre by its name from the database.
     
-    Prints an error message if the genre does not exist.
+    If the genre does not exist, it creates a new Genres entry
+    and returns its ID.
 
     Args:
         name (str): The name of the genre.
@@ -18,11 +19,12 @@ def get_genre_id(name):
     session = create_session()
     try :
         genre_id = session.query(Genres.id).filter(Genres.genre_name == name).scalar()
-        if genre_id is None:
-            print("-"*70)
-            print(f"No genre found for : '{name}'")
-            print("-"*70)
-        return genre_id
+        if genre_id is not None:
+            return genre_id
+        genre = Genres(genre_name = name)
+        session.add(genre)
+        session.flush()
+        return genre.id
     finally : 
         session.close()
 
@@ -30,7 +32,8 @@ def get_publisher_id(name):
     """
     Retrieve the ID of a publisher by its name from the database.
     
-    Prints an error message if the publisher does not exist.
+    If the publisher does not exist, it creates a new Publishers entry
+    and returns its ID.
 
     Args:
         name (str): The name of the publisher.
@@ -41,11 +44,12 @@ def get_publisher_id(name):
     session = create_session()
     try :
         publisher_id = session.query(Publishers.id).filter(Publishers.publisher_name == name).scalar()
-        if publisher_id is None:
-            print("-"*70)
-            print(f"No publisher found for : '{name}'")
-            print("-"*70)
-        return publisher_id
+        if publisher_id is not None:
+            return publisher_id
+        publisher = Publishers(publisher_name = name)
+        session.add(publisher)
+        session.flush()
+        return publisher.id
     finally : 
         session.close()
 
@@ -54,46 +58,52 @@ def get_platform_id(name):
     """
     Retrieve the ID of a platform by its name from the database.
     
-    Prints an error message if the platform does not exist.
+    If the platform does not exist, it creates a new Platforms entry
+    and returns its ID.
 
     Args:
         name (str): The name of the platform.
 
     Returns:
-        int or None: The ID of the platform if found, otherwise None.
+        int: The ID of the platform if found, otherwise None.
     """
     session = create_session()
     try :
         platform_id = session.query(Platforms.id).filter(Platforms.platform_name == name).scalar()
-        if platform_id is None:
-            print("-"*70)
-            print(f"No platform found for : '{name}'")
-            print("-"*70)
-        return platform_id
+        if platform_id is not None:
+            return platform_id
+        platform = Platforms(platform_name = name)
+        session.add(platform)
+        session.flush()
+        return platform.id
     finally : 
+        session.commit()
         session.close()
 
 def get_year_id(name):
     """
     Retrieve the ID of a release_year by its value from the database.
     
-    Prints an error message if the release_year does not exist.
+    If the release_year does not exist, it creates a new Release_years entry
+    and returns its ID.
 
     Args:
         name (str): The name of the release_year.
 
     Returns:
-        int or None: The ID of the release_year if found, otherwise None.
+        int : The ID of the release_year if found, otherwise None.
     """
     session = create_session()
     try :
         release_year_id = session.query(Release_years.id).filter(Release_years.release_year == name).scalar()
-        if release_year_id is None:
-            print("-"*70)
-            print(f"No release year found for : '{name}'")
-            print("-"*70)
-        return release_year_id
+        if release_year_id is not None:
+            return release_year_id
+        release_year = Release_years(release_year = name)
+        session.add(release_year)
+        session.flush()        
+        return release_year.id
     finally : 
+        session.commit()
         session.close()
 
 def get_game_id(name):
@@ -111,11 +121,12 @@ def get_game_id(name):
     session = create_session()
     try :
         game_id = session.query(Games.id).filter(Games.game_name == name).scalar()
-        if game_id is None:
-            print("-"*70)
-            print(f"No game found for : '{name}'")
-            print("-"*70)
-        return game_id
+        if game_id is not None:
+            return game_id
+        game = Games(game_name = name)
+        session.add(game)
+        session.flush()        
+        return game.id
     finally : 
         session.close()
     
