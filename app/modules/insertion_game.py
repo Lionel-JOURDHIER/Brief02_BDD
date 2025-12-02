@@ -4,7 +4,7 @@ from app.db.tables import Games, Genres, Platforms, Publishers, Release_years, G
 from app.modules.session import create_session
 from app.modules.get_game import existing_genre, existing_publisher, existing_year, existing_platform, existing_game
 
-def init_bdd():
+def init_bdd_game():
     """
     Initialize the database with default entries for essential lookup tables.
     """
