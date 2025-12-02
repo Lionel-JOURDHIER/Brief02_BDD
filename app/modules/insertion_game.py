@@ -2,7 +2,7 @@ import pandas as pd
 
 from app.db.tables import Games, Genres, Platforms, Publishers, Release_years, GamesPlatforms
 from app.modules.session import create_session
-from app.modules.get_game import existing_genre, existing_publisher, existing_year, existing_platform, existing_game
+from app.modules.get_game import get_game_id, get_genre_id, get_platform_id, get_publisher_id, get_year_id, existing_genre, existing_publisher, existing_year, existing_platform, existing_game
 
 def init_bdd_game():
     """
@@ -64,7 +64,7 @@ def publishers_to_add(data: pd.DataFrame):
         if publisher_name_low in existing_publishers or publisher_name_low in seen_publishers: 
             continue
         seen_publishers.add(publisher_name_low)
-        publisher_to_add = Publishers(publisher_name=publisher_name_low)
+        publisher_to_add = Publishers(publisher_name=publisher_name)
         publishers_to_add.append(publisher_to_add)
     return publishers_to_add
 
@@ -103,7 +103,7 @@ def genres_to_add(data: pd.DataFrame):
         if  genre_name_low in existing_genres or genre_name_low in seen_genres:
             continue
         seen_genres.add(genre_name_low)
-        genre_to_add = Genres(genre_name=genre_name_low)
+        genre_to_add = Genres(genre_name=genre_name)
         genres_to_add.append(genre_to_add)
     return genres_to_add
 
@@ -181,7 +181,7 @@ def platforms_to_add(data: pd.DataFrame):
         if platform_low in existing_platforms or platform_low in seen_platforms:  
             continue
         seen_platforms.add(platform_low)
-        platform_to_add = Platforms(platform_name=platform_low)
+        platform_to_add = Platforms(platform_name=platform)
         platforms_to_add.append(platform_to_add)
     return platforms_to_add
 
@@ -210,26 +210,47 @@ def games_to_add(data: pd.DataFrame):
     games_to_add = []
     seen_games = {"NULL", None, ""}
     existing_games = existing_game()
+    existing_publishers = existing_publisher()
+    existing_genres = existing_genre()
+    existing_years = existing_year()
     for row in data.itertuples():
-        release_year_id = row.Year_id
-        if pd.isna(release_year_id):
+        
+        release_year = row.Year
+        if pd.isna(release_year):
             release_year_id = 1
-        publisher_id = row.Publisher_id
-        if pd.isna(publisher_id):
+        else : 
+            release_year_int = int(float(release_year))
+        if release_year_int in existing_years :
+            release_year_id = existing_years.get(release_year_int, 1)
+        else : 
+            release_year_id = get_game_id(release_year_int)
+
+        publisher = row.Publisher
+        if pd.isna(publisher):
             publisher_id = 1
-        platform_id = row.Platform_id
-        if pd.isna(platform_id):
-            platform_id = 1
-        genre_id = row.Genre_id
-        if pd.isna(genre_id):
+        publisher_low = str(publisher).strip().lower()
+        if publisher_low in existing_publishers:
+            publisher_id = existing_publishers.get(publisher_low, 1)
+        else : 
+            publisher_id = get_publisher_id(publisher)
+
+        genre = row.Genre
+        if pd.isna(genre):
             genre_id = 1
-        game_name = str(row.Name).strip().lower()
-        print(game_name)
-        if game_name in {g.lower() for g in existing_games} or game_name in seen_games: 
+        genre_low = str(genre).strip().lower()
+        if genre_low in existing_genres :
+            genre_id = existing_genres.get(genre_low,1)
+        else : 
+            genre_id = get_genre_id(genre)
+        
+        game_name = row.Name
+        game_name_low = str(game_name).strip().lower()
+
+        if game_name_low in existing_games or game_name_low in seen_games: 
             continue
-        seen_games.add(str(game_name))
+        seen_games.add(str(game_name_low))
         game_to_add = Games(
-            game_name = game_name,
+            game_name = row.Name,
             NA_sales = row.NA_Sales,
             EU_sales = row.EU_Sales,
             JP_sales = row.JP_Sales,

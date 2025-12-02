@@ -140,7 +140,9 @@ def existing_genre():
     session = create_session()
     try :
         existing_genres = {
-                p[0] for p in session.query(Genres.genre_name).all()
+                str(p.genre_name).lower().strip() : p.id 
+                for p in session.query(Genres).all()
+                if p.genre_name not in (None, '')
             }
         return existing_genres
     finally : 
@@ -151,12 +153,14 @@ def existing_publisher():
     Retrieve all publisher names currently stored in the database.
 
     Returns:
-        set[str]: A set containing all existing publisher names.
+        dict[str, int]: A dictionary mapping publisher names to its database ID.
     """
     session = create_session()
     try :
         existing_publishers = {
-                p[0] for p in session.query(Publishers.publisher_name).all()
+                str(p.publisher_name).lower().strip() : p.id 
+                for p in session.query(Publishers).all()
+                if p.publisher_name not in (None, '')
             }
         return existing_publishers
     finally : 
@@ -164,15 +168,17 @@ def existing_publisher():
 
 def existing_year():
     """
-    Retrieve all release_year value currently stored in the database.
+    Retrieve all release_year values currently stored in the database as a mapping from year to ID.
 
     Returns:
-        set[str]: A set containing all existing release_year value.
+        dict[int, int]: A dictionary mapping release_year (int) to its database ID.
     """
     session = create_session()
     try :
         existing_years = {
-                p[0] for p in session.query(Release_years.release_year).all()
+                p.release_year : p.id 
+                for p in session.query(Release_years).all() 
+                if p.release_year not in (None, '')
             }
         return existing_years
     finally : 
@@ -183,12 +189,14 @@ def existing_platform():
     Retrieve all platform names currently stored in the database.
 
     Returns:
-        set[str]: A set containing all existing platform names.
+        dict[str, int]: A dictionary mapping platform names to its database ID.
     """
     session = create_session()
     try :
         existing_platforms = {
-                p[0] for p in session.query(Platforms.platform_name).all()
+                str(p.platform_name).lower().strip() 
+                for p in session.query(Platforms).all()
+                if p.platform_name not in (None, '')
             }
         return existing_platforms
     finally : 
@@ -204,7 +212,9 @@ def existing_game():
     session = create_session()
     try :
         existing_games = {
-                p[0] for p in session.query(Games.game_name).all()
+                str(p.game_name).lower().strip()  : p.id 
+                for p in session.query(Games).all()
+                if p.game_name not in (None, '')
             }
         return existing_games
     finally : 
