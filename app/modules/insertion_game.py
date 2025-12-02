@@ -27,7 +27,7 @@ def publishers_to_add(data: pd.DataFrame):
             in the database and should be inserted.
     """
     data_sorted = data.sort_values(by="Publisher_id")
-    publishers_to_add = [Publishers(publisher_name="No publisher")]
+    publishers_to_add = []
     seen_publishers = {"NULL", None, ""}
     # Extract the existing publisher list
     existing_publishers = existing_publisher()
@@ -37,16 +37,15 @@ def publishers_to_add(data: pd.DataFrame):
         # Check if Nan
         if pd.isna(publisher_name):
             continue
+        
+        publisher_name_low = str(publisher_name).strip().lower()
 
         # Check if in the existing publisher list
-        if publisher_name in existing_publishers: 
+        if publisher_name_low in existing_publishers or publisher_name_low in seen_publishers: 
             continue
-
-        # Check if already add in this dataset or Null or None or ""
-        if publisher_name not in seen_publishers:
-            seen_publishers.add(publisher_name)
-            publisher_to_add = Publishers(publisher_name=row.Publisher)
-            publishers_to_add.append(publisher_to_add)
+        seen_publishers.add(publisher_name_low)
+        publisher_to_add = Publishers(publisher_name=publisher_name_low)
+        publishers_to_add.append(publisher_to_add)
     return publishers_to_add
 
 def genres_to_add(data: pd.DataFrame):
@@ -73,19 +72,19 @@ def genres_to_add(data: pd.DataFrame):
 
     """
     data_sorted = data.sort_values(by="Genre_id")
-    genres_to_add = [Genres(genre_name="No genre")]
+    genres_to_add = []
     seen_genres = {"NULL", None, ""}
     existing_genres = existing_genre()
     for row in data_sorted.itertuples():
         genre_name = row.Genre
         if pd.isna(genre_name):
             continue
-        if genre_name in existing_genres: 
+        genre_name_low = str(genre_name).strip().lower()
+        if  genre_name_low in existing_genres or genre_name_low in seen_genres:
             continue
-        if genre_name not in seen_genres:
-            seen_genres.add(genre_name)
-            genre_to_add = Genres(genre_name=row.Genre)
-            genres_to_add.append(genre_to_add)
+        seen_genres.add(genre_name_low)
+        genre_to_add = Genres(genre_name=genre_name_low)
+        genres_to_add.append(genre_to_add)
     return genres_to_add
 
 def release_years_to_add(data: pd.DataFrame):
@@ -111,19 +110,20 @@ def release_years_to_add(data: pd.DataFrame):
             in the database and should be inserted.
     """
     data_sorted = data.sort_values(by="Year_id")
-    years_to_add = [Release_years(release_year="No release_year")]
+    years_to_add = []
     seen_years = {"NULL", None, ""}
     existing_years = existing_year()
+    print(existing_years)
     for row in data_sorted.itertuples():
         year = row.Year
         if pd.isna(year):
             continue
-        if year in existing_years:
+        year_int = int(float(row.Year))
+        if year_int in existing_years or year_int in seen_years:
             continue
-        if year not in seen_years:
-            seen_years.add(year)
-            year_to_add = Release_years(release_year=int(float(row.Year)))
-            years_to_add.append(year_to_add)
+        seen_years.add(year_int)
+        year_to_add = Release_years(release_year=year_int)
+        years_to_add.append(year_to_add)
     return years_to_add
 
 def platforms_to_add(data: pd.DataFrame):
@@ -150,19 +150,19 @@ def platforms_to_add(data: pd.DataFrame):
 
     """
     data_sorted = data.sort_values(by="Platform_id")
-    platforms_to_add = [Platforms(platform_name="No platform")]
+    platforms_to_add = []
     seen_platforms = {"NULL", None, ""}
     existing_platforms = existing_platform()
     for row in data_sorted.itertuples():
         platform = row.Platform
         if pd.isna(platform):
             continue
-        if platform in existing_platforms: 
+        platform_low = str(platform).strip().lower()
+        if platform_low in existing_platforms or platform_low in seen_platforms:  
             continue
-        if platform not in seen_platforms:
-            seen_platforms.add(platform)
-            platform_to_add = Platforms(platform_name=row.Platform)
-            platforms_to_add.append(platform_to_add)
+        seen_platforms.add(platform_low)
+        platform_to_add = Platforms(platform_name=platform_low)
+        platforms_to_add.append(platform_to_add)
     return platforms_to_add
 
 def games_to_add(data: pd.DataFrame):
@@ -188,6 +188,7 @@ def games_to_add(data: pd.DataFrame):
             in the database and should be inserted.
     """
     games_to_add = []
+    seen_games = {"NULL", None, ""}
     existing_games = existing_game()
     for row in data.itertuples():
         release_year_id = row.Year_id
@@ -202,12 +203,13 @@ def games_to_add(data: pd.DataFrame):
         genre_id = row.Genre_id
         if pd.isna(genre_id):
             genre_id = 1
-        game_name = row.Name
-        if game_name in existing_games : 
+        game_name = str(row.Name).strip().lower()
+        print(game_name)
+        if game_name in {g.lower() for g in existing_games} or game_name in seen_games: 
             continue
+        seen_games.add(str(game_name))
         game_to_add = Games(
-            rank_game = row.Rank,
-            game_name = row.Name,
+            game_name = game_name,
             NA_sales = row.NA_Sales,
             EU_sales = row.EU_Sales,
             JP_sales = row.JP_Sales,
