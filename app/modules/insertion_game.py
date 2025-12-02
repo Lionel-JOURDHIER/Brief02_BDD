@@ -5,14 +5,20 @@ from app.modules.session import create_session
 from app.modules.get_game import existing_genre, existing_publisher, existing_year, existing_platform, existing_game
 
 def init_bdd():
+    """
+    Initialize the database with default entries for essential lookup tables.
+    """
     try : 
+        init_bdd_list = []
         session = create_session()
-        init_bdd_list = [
-            Publishers(publisher_name="no publisher"), 
-            Genres(genre_name="no genre"),
-            Platforms(platform_name="no platform"),
-            Release_years(release_year="no release_year"),
-            ]
+        if not existing_publisher():
+            init_bdd_list.append(Publishers(publisher_name="no publisher"))
+        if not existing_genre():
+            init_bdd_list.append(Genres(genre_name="no genre"))
+        if not existing_year():
+            init_bdd_list.append(Release_years(release_year="no release_year"))
+        if not existing_platform():
+            init_bdd_list.append(Platforms(platform_name="no platform"))
         session.add_all(init_bdd_list)
         session.commit()
     finally:
