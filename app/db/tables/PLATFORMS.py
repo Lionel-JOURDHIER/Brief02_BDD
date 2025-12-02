@@ -9,4 +9,4 @@ class Platforms(Base):
     platform_name = Column(String)
    
     # relation 0-N
-    game_platform = relationship("Games_platforms", back_populates="platform")
+    game_platform = relationship("GamesPlatforms", back_populates="platform")

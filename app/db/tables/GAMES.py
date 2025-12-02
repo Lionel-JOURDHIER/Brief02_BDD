@@ -26,6 +26,6 @@ class Games(Base):
     # relation 0-N
     reviews = relationship("Reviews", back_populates="game")  
 
-    game_platform = relationship("Games_platforms", back_populates="game")
+    game_platform = relationship("GamesPlatforms", back_populates="game")
 
 

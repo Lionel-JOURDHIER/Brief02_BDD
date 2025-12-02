@@ -13,7 +13,7 @@ from .RELEASE_YEARS import Release_years
 from .REVIEWS import Reviews
 from .GAMES import Games
 from .CITY_PC_CORRESPS import City_pc_corresps
-
+from .GAMES_PLATFORM import GamesPlatforms
 
 
 __all__ =[
@@ -34,4 +34,5 @@ __all__ =[
     "Regions",
     "Sales",
     "City_pc_corresps",
+    "GamesPlatforms"
 ]

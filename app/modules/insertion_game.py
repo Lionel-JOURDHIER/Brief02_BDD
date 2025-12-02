@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.db.tables import Games, Genres, Platforms, Publishers, Release_years
+from app.db.tables import Games, Genres, Platforms, Publishers, Release_years, GamesPlatforms
 from app.modules.session import create_session
 from app.modules.get_game import existing_genre, existing_publisher, existing_year, existing_platform, existing_game
 
@@ -217,7 +217,6 @@ def games_to_add(data: pd.DataFrame):
             global_sales = row.Global_Sales,
             release_year_id = release_year_id,
             publisher_id = publisher_id,
-            platform_id = platform_id,
             genre_id = genre_id
             )
         games_to_add.append(game_to_add)
