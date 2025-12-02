@@ -27,6 +27,7 @@ def get_publisher_id(name):
     finally : 
         session.close()
 
+
 def get_platform_id(name):
     session = create_session()
     try :
@@ -63,3 +64,52 @@ def get_game_id(name):
     finally : 
         session.close()
     
+def existing_genre():
+    session = create_session()
+    try :
+        existing_genres = {
+                p[0] for p in session.query(Genres.genre_name).all()
+            }
+        return existing_genres
+    finally : 
+        session.close()
+
+def existing_publisher():
+    session = create_session()
+    try :
+        existing_publishers = {
+                p[0] for p in session.query(Publishers.publisher_name).all()
+            }
+        return existing_publishers
+    finally : 
+        session.close()
+
+def existing_year():
+    session = create_session()
+    try :
+        existing_years = {
+                p[0] for p in session.query(Release_years.release_year).all()
+            }
+        return existing_years
+    finally : 
+        session.close()
+    
+def existing_platform():
+    session = create_session()
+    try :
+        existing_platforms = {
+                p[0] for p in session.query(Platforms.platform_name).all()
+            }
+        return existing_platforms
+    finally : 
+        session.close()
+    
+def existing_game():
+    session = create_session()
+    try :
+        existing_games = {
+                p[0] for p in session.query(Games.game_name).all()
+            }
+        return existing_games
+    finally : 
+        session.close()

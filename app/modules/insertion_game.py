@@ -2,16 +2,47 @@ import pandas as pd
 
 from app.db.tables import Games, Genres, Platforms, Publishers, Release_years
 from app.modules.session import create_session
+from app.modules.get_game import existing_genre, existing_publisher, existing_year, existing_platform, existing_game
 
 def publishers_to_add(data: pd.DataFrame):
+    """
+    Build a list of new Publishers objects to insert into the database.
+
+    This function:
+      - Sorts the input DataFrame by "Publisher_id"
+      - Loads the list of existing publishers already stored in the database
+      - Iterates over each row of the DataFrame
+      - Skips invalid or empty publisher names (NaN, None, "", "NULL")
+      - Skips publishers already existing in the database
+      - Avoids duplicates within the current dataset using a local set
+      - Returns a list of Publisher ORM objects ready for insertion
+
+    Args : 
+        data : pd.DataFrame
+            The DataFrame containing a "Publisher" column and a "Publisher_id" column.
+
+    Returns :
+        list[Publishers]
+            A list of SQLAlchemy `Publishers` objects that are not yet present
+            in the database and should be inserted.
+    """
     data_sorted = data.sort_values(by="Publisher_id")
     publishers_to_add = [Publishers(publisher_name="No publisher")]
     seen_publishers = {"NULL", None, ""}
-    #! ADD CHECK PUBLISHERS
+    # Extract the existing publisher list
+    existing_publishers = existing_publisher()
     for row in data_sorted.itertuples():
         publisher_name = row.Publisher
+
+        # Check if Nan
         if pd.isna(publisher_name):
             continue
+
+        # Check if in the existing publisher list
+        if publisher_name in existing_publishers: 
+            continue
+
+        # Check if already add in this dataset or Null or None or ""
         if publisher_name not in seen_publishers:
             seen_publishers.add(publisher_name)
             publisher_to_add = Publishers(publisher_name=row.Publisher)
@@ -19,13 +50,37 @@ def publishers_to_add(data: pd.DataFrame):
     return publishers_to_add
 
 def genres_to_add(data: pd.DataFrame):
+    """
+    Build a list of new Genres objects to insert into the database.
+    
+    This function:
+      - Sorts the input DataFrame by "Genre_id"
+      - Loads the list of existing genres already stored in the database
+      - Iterates over each row of the DataFrame
+      - Skips invalid or empty publisher names (NaN, None, "", "NULL")
+      - Skips genres already existing in the database
+      - Avoids duplicates within the current dataset using a local set
+      - Returns a list of Genres ORM objects ready for insertion
+
+    Args : 
+        data : pd.DataFrame
+            The DataFrame containing a "Genre" column and a "Genre_id" column.
+
+    Returns :
+        list[Genres]
+            A list of SQLAlchemy `Genres` objects that are not yet present
+            in the database and should be inserted.
+
+    """
     data_sorted = data.sort_values(by="Genre_id")
     genres_to_add = [Genres(genre_name="No genre")]
     seen_genres = {"NULL", None, ""}
-    #! ADD CHECK GENRES
+    existing_genres = existing_genre()
     for row in data_sorted.itertuples():
         genre_name = row.Genre
         if pd.isna(genre_name):
+            continue
+        if genre_name in existing_genres: 
             continue
         if genre_name not in seen_genres:
             seen_genres.add(genre_name)
@@ -34,13 +89,36 @@ def genres_to_add(data: pd.DataFrame):
     return genres_to_add
 
 def release_years_to_add(data: pd.DataFrame):
+    """
+    Build a list of new Release_years objects to insert into the database.
+    
+    This function:
+      - Sorts the input DataFrame by "Year_id"
+      - Loads the list of existing year already stored in the database
+      - Iterates over each row of the DataFrame
+      - Skips invalid or empty publisher names (NaN, None, "", "NULL")
+      - Skips release_year already existing in the database
+      - Avoids duplicates within the current dataset using a local set
+      - Returns a list of Release_years ORM objects ready for insertion
+
+    Args : 
+        data : pd.DataFrame
+            The DataFrame containing a "Year" column and a "Year_id" column.
+
+    Returns :
+        list[Release_years]
+            A list of SQLAlchemy `Release_years` objects that are not yet present
+            in the database and should be inserted.
+    """
     data_sorted = data.sort_values(by="Year_id")
     years_to_add = [Release_years(release_year="No release_year")]
     seen_years = {"NULL", None, ""}
-    #! ADD CHECK RELEASE_YEAR
+    existing_years = existing_year()
     for row in data_sorted.itertuples():
         year = row.Year
         if pd.isna(year):
+            continue
+        if year in existing_years:
             continue
         if year not in seen_years:
             seen_years.add(year)
@@ -49,13 +127,37 @@ def release_years_to_add(data: pd.DataFrame):
     return years_to_add
 
 def platforms_to_add(data: pd.DataFrame):
+    """
+    Build a list of new Platforms objects to insert into the database.
+    
+    This function:
+      - Sorts the input DataFrame by "Platform_id"
+      - Loads the list of existing platform already stored in the database
+      - Iterates over each row of the DataFrame
+      - Skips invalid or empty publisher names (NaN, None, "", "NULL")
+      - Skips platform already existing in the database
+      - Avoids duplicates within the current dataset using a local set
+      - Returns a list of Platforms ORM objects ready for insertion
+
+    Args : 
+        data : pd.DataFrame
+            The DataFrame containing a "Platform" column and a "Platform_id" column.
+
+    Returns :
+        list[Platforms]
+            A list of SQLAlchemy `Platforms` objects that are not yet present
+            in the database and should be inserted.
+
+    """
     data_sorted = data.sort_values(by="Platform_id")
     platforms_to_add = [Platforms(platform_name="No platform")]
     seen_platforms = {"NULL", None, ""}
-    #! ADD CHECK PLATFORM
+    existing_platforms = existing_platform()
     for row in data_sorted.itertuples():
         platform = row.Platform
         if pd.isna(platform):
+            continue
+        if platform in existing_platforms: 
             continue
         if platform not in seen_platforms:
             seen_platforms.add(platform)
@@ -64,7 +166,29 @@ def platforms_to_add(data: pd.DataFrame):
     return platforms_to_add
 
 def games_to_add(data: pd.DataFrame):
+    """
+    Build a list of new Games objects to insert into the database.
+    
+    This function:
+      - Iterates over each row of the input DataFrame
+      - Skips invalid or missing foreign key IDs (NaN) by assigning default values
+      - Skips games already existing in the database
+      - Avoids duplicates within the current dataset using existing game names
+      - Returns a list of Games ORM objects ready for insertion
+
+    Args : 
+        data : pd.DataFrame
+            The DataFrame containing game information with the following columns:
+            "Rank", "Name", "NA_Sales", "EU_Sales", "JP_Sales", "Other_Sales",
+            "Global_Sales", "Year_id", "Publisher_id", "Platform_id", "Genre_id"
+
+    Returns :
+        list[Games]
+            A list of SQLAlchemy `Games` objects that are not yet present
+            in the database and should be inserted.
+    """
     games_to_add = []
+    existing_games = existing_game()
     for row in data.itertuples():
         release_year_id = row.Year_id
         if pd.isna(release_year_id):
@@ -78,6 +202,9 @@ def games_to_add(data: pd.DataFrame):
         genre_id = row.Genre_id
         if pd.isna(genre_id):
             genre_id = 1
+        game_name = row.Name
+        if game_name in existing_games : 
+            continue
         game_to_add = Games(
             rank_game = row.Rank,
             game_name = row.Name,
@@ -95,23 +222,42 @@ def games_to_add(data: pd.DataFrame):
     return games_to_add
 
 def games_all_to_db (data: pd.DataFrame):
-    
+    """
+    Insert all games-related data into the database in the correct order.
+
+    This function:
+      - Opens a database session
+      - Adds publishers, genres, release years, and platforms to the database first
+      - Adds games after the related foreign key objects have been inserted
+      - Commits the transaction and closes the session
+      - Ensures the session is closed even if an error occurs
+
+    Args:
+        data : pd.DataFrame
+            The DataFrame containing all game information, including columns for:
+            "Publisher", "Genre", "Year", "Platform", "Name", "Rank", 
+            "NA_Sales", "EU_Sales", "JP_Sales", "Other_Sales", "Global_Sales"
+
+    Returns:
+        None
+    """
     session = create_session()
+    try: 
+        for i in publishers_to_add(data):
+            session.add(i)
 
-    for i in publishers_to_add(data):
-        session.add(i)
+        for i in genres_to_add(data):
+            session.add(i)
 
-    for i in genres_to_add(data):
-        session.add(i)
+        for i in release_years_to_add(data):
+            session.add(i)
+            
+        for i in platforms_to_add(data):
+            session.add(i)
 
-    for i in release_years_to_add(data):
-        session.add(i)
-        
-    for i in platforms_to_add(data):
-        session.add(i)
-
-    for i in games_to_add(data):
-        session.add(i)
-        
-    session.commit()
-    session.close()
+        for i in games_to_add(data):
+            session.add(i)
+            
+        session.commit()
+    finally:
+        session.close()
