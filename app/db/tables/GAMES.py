@@ -6,7 +6,6 @@ class Games(Base):
     __tablename__ = 'games'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-    rank_game = Column(Integer)
     game_name = Column(String)
     NA_sales = Column(Float(precision=2))
     EU_sales = Column(Float(precision=2))
