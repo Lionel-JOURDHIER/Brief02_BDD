@@ -1,9 +1,9 @@
 import pandas as pd
 
-from app.db.tables import Players, Contacts, Addresses, Cities, Countries, Postal_codes
+from app.db.tables import Players, Contacts, Addresses, Cities, Countries, Postal_codes, City_pc_corresps
 from app.modules.encrypt import encrypt_string
 from app.modules.session import create_session
-from app.modules.get_player import existing_city_cp
+from app.modules.get_player import existing_city_cp, get_city_id, get_pc_id
 
 def players_to_add(data: pd.DataFrame):
     players_to_add = []
@@ -86,22 +86,22 @@ def postal_code_to_add(data : pd.DataFrame):
     return pcs_to_add
 
 def city_cp_corresp_to_add(data : pd.DataFrame):
-    city_cp_to_add = []
+    city_cps_to_add = []
     existing_city_cps = existing_city_cp()
-    #! ADD CHECK POSTAL CODE
+
     for row in data.itertuples():
         if pd.isna(row.postal_code) or pd.isna(row.city) :
             continue
-        postal_code_id = get_game_id(row.postal_code)
-        platform_id = get_platform_id(platform_name_low)
-        review_tuple = (player_id, game_id)
-        if postal_code not in seen_pc:
-            seen_pc.add(postal_code)
-            pc_to_add = Postal_codes(
-                postal_code_value = row.postal_code,
+        postal_code_id = get_pc_id(row.postal_code)
+        city_id = get_city_id(row.city)
+        city_cp_tuple = (postal_code_id, city_id)
+        if city_cp_tuple in existing_city_cps :
+            city_cp_to_add = City_pc_corresps(
+                postal_code_id = postal_code_id,
+                city_id = city_id
                 )
-            pcs_to_add.append(pc_to_add)
-    return pcs_to_add
+            city_cps_to_add(city_cp_to_add)
+    return city_cps_to_add
 
 
 def players_all_to_db (data: pd.DataFrame):
@@ -124,6 +124,9 @@ def players_all_to_db (data: pd.DataFrame):
         session.add(i)
 
     for i in postal_code_to_add(data):
+        session.add(i)
+        
+    for i in city_cp_corresp_to_add(data):
         session.add(i)
         
     session.commit()
