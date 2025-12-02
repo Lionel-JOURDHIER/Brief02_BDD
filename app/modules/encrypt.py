@@ -67,9 +67,37 @@ def load_fernet_key(path="fernet.key"):
         print(f"Failed to read or decode key from '{path}': {e}. Continuing without key.")
         return None
     
-create_fernet_key()
 FERNET_KEY = load_fernet_key()
 fernet = Fernet(FERNET_KEY)
+
+def encrypt_string(original_text, fernet_key = FERNET_KEY):
+    """
+    Encrypts a string using Fernet symmetric encryption.
+
+    Args : 
+        original_text: The plaintext string to encrypt.
+        fernet_key: The Fernet key to use for encryption (bytes).
+    Return: 
+        The encrypted string, base64-encoded (UTF-8).
+    """
+    fernet = Fernet(fernet_key)
+    byte_text = original_text.encode()
+    encrypted_bytes = fernet.encrypt(byte_text)
+    return encrypted_bytes.decode()
+
+def decrypt_string(encrypted_text, fernet_key = FERNET_KEY):
+    """
+    Decrypts a Fernet-encrypted string.
+
+    Args : 
+        encrypted_text: The encrypted string (UTF-8)
+    Return: 
+        The original plaintext string
+    """
+    fernet = Fernet(fernet_key)
+    byte_text = encrypted_text.encode()
+    original_bytes = fernet.decrypt(byte_text)
+    return original_bytes.decode()
 
 class EncryptedString(TypeDecorator):
     """
@@ -89,7 +117,8 @@ class EncryptedString(TypeDecorator):
         - Stored values in the database are UTF-8 encoded strings of the encrypted bytes.
     """
     impl = String
-
+    cache_ok = True 
+    
     def process_bind_param(self, value, dialect):
         if value is None:
             return value
