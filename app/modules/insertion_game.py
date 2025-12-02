@@ -4,6 +4,20 @@ from app.db.tables import Games, Genres, Platforms, Publishers, Release_years, G
 from app.modules.session import create_session
 from app.modules.get_game import existing_genre, existing_publisher, existing_year, existing_platform, existing_game
 
+def init_bdd():
+    try : 
+        session = create_session()
+        init_bdd_list = [
+            Publishers(publisher_name="no publisher"), 
+            Genres(genre_name="no genre"),
+            Platforms(platform_name="no platform"),
+            Release_years(release_year="no release_year"),
+            ]
+        session.add_all(init_bdd_list)
+        session.commit()
+    finally:
+        session.close()
+
 def publishers_to_add(data: pd.DataFrame):
     """
     Build a list of new Publishers objects to insert into the database.
