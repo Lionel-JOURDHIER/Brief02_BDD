@@ -2,7 +2,7 @@ import pandas as pd
 
 from app.db.tables import Games, Genres, Platforms, Publishers, Release_years, GamesPlatforms
 from app.modules.session import create_session
-from app.modules.get_game import get_game_id, get_genre_id, get_platform_id, get_publisher_id, get_year_id, existing_genre, existing_publisher, existing_year, existing_platform, existing_game
+from app.modules.get_game import get_game_id, get_genre_id, get_platform_id, get_publisher_id, get_year_id, existing_genre, existing_publisher, existing_year, existing_platform, existing_game, existing_gameplatform
 
 def init_bdd_game():
     """
@@ -133,16 +133,15 @@ def release_years_to_add(data: pd.DataFrame):
     years_to_add = []
     seen_years = {"NULL", None, ""}
     existing_years = existing_year()
-    print(existing_years)
     for row in data_sorted.itertuples():
         year = row.Year
         if pd.isna(year):
             continue
-        year_int = int(float(row.Year))
-        if year_int in existing_years or year_int in seen_years:
+        year_low = str(int(row.Year))
+        if year_low in existing_years or year_low in seen_years:
             continue
-        seen_years.add(year_int)
-        year_to_add = Release_years(release_year=year_int)
+        seen_years.add(year_low)
+        year_to_add = Release_years(release_year=year_low)
         years_to_add.append(year_to_add)
     return years_to_add
 
@@ -213,42 +212,54 @@ def games_to_add(data: pd.DataFrame):
     existing_publishers = existing_publisher()
     existing_genres = existing_genre()
     existing_years = existing_year()
+    
+
     for row in data.itertuples():
         
+        # --- Release_year ---
         release_year = row.Year
         if pd.isna(release_year):
             release_year_id = 1
         else : 
-            release_year_int = int(float(release_year))
-        if release_year_int in existing_years :
-            release_year_id = existing_years.get(release_year_int, 1)
-        else : 
-            release_year_id = get_game_id(release_year_int)
+            release_year_str = str(int(release_year))
+            if release_year_str in existing_years :
+                release_year_id = existing_years[release_year_str]
+            else : 
+                release_year_id = get_year_id(release_year_str)
+                existing_years[release_year_str] = release_year_id
 
+        # --- Publisher ---
         publisher = row.Publisher
         if pd.isna(publisher):
             publisher_id = 1
-        publisher_low = str(publisher).strip().lower()
-        if publisher_low in existing_publishers:
-            publisher_id = existing_publishers.get(publisher_low, 1)
         else : 
-            publisher_id = get_publisher_id(publisher)
+            publisher_low = str(publisher).strip().lower()
+            if publisher_low in existing_publishers:
+                publisher_id = existing_publishers[publisher_low]
+            else : 
+                publisher_id = get_publisher_id(publisher)
+                existing_publishers[publisher_low] = publisher_id
 
+        # --- Genre ---
         genre = row.Genre
         if pd.isna(genre):
             genre_id = 1
-        genre_low = str(genre).strip().lower()
-        if genre_low in existing_genres :
-            genre_id = existing_genres.get(genre_low,1)
         else : 
-            genre_id = get_genre_id(genre)
+            genre_low = str(genre).strip().lower()
+            if genre_low in existing_genres :
+                genre_id = existing_genres[genre_low]
+            else : 
+                genre_id = get_genre_id(genre)
+                existing_genres[genre_low] = genre_id
         
         game_name = row.Name
         game_name_low = str(game_name).strip().lower()
 
         if game_name_low in existing_games or game_name_low in seen_games: 
             continue
+
         seen_games.add(str(game_name_low))
+
         game_to_add = Games(
             game_name = row.Name,
             NA_sales = row.NA_Sales,
@@ -262,6 +273,23 @@ def games_to_add(data: pd.DataFrame):
             )
         games_to_add.append(game_to_add)
     return games_to_add
+
+def games_plateform_to_add(data: pd.DataFrame):
+    gps_to_add = []
+    existing_games_platforms = existing_gameplatform()
+    for row in data.itertuples():
+        if pd.isna(row.Name) or pd.isna(row.Platform):
+            continue
+        game_id = get_game_id(row.Name)
+        platform_name_low = str(row.Platform).lower().strip()  # handle multiple platforms
+        platform_id = get_platform_id(platform_name_low)
+        gp_tuple = (platform_id, game_id)
+        if gp_tuple in existing_games_platforms :
+            continue
+        gp = GamesPlatforms(game_id=game_id, platform_id=platform_id)
+        gps_to_add.append(gp)
+    return gps_to_add
+
 
 def games_all_to_db (data: pd.DataFrame):
     """
@@ -296,8 +324,8 @@ def games_all_to_db (data: pd.DataFrame):
             
         for i in platforms_to_add(data):
             session.add(i)
-
-        for i in games_to_add(data):
+        
+        for i in games_plateform_to_add(data):
             session.add(i)
             
         session.commit()

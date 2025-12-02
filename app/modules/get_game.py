@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.db.tables import Games, Genres, Platforms, Publishers, Release_years
+from app.db.tables import Games, Genres, Platforms, Publishers, Release_years, GamesPlatforms
 from app.modules.session import create_session
 
 def get_genre_id(name):
@@ -23,7 +23,7 @@ def get_genre_id(name):
             return genre_id
         genre = Genres(genre_name = name)
         session.add(genre)
-        session.flush()
+        session.commit()
         return genre.id
     finally : 
         session.close()
@@ -48,7 +48,7 @@ def get_publisher_id(name):
             return publisher_id
         publisher = Publishers(publisher_name = name)
         session.add(publisher)
-        session.flush()
+        session.commit()
         return publisher.id
     finally : 
         session.close()
@@ -74,7 +74,7 @@ def get_platform_id(name):
             return platform_id
         platform = Platforms(platform_name = name)
         session.add(platform)
-        session.flush()
+        session.commit()
         return platform.id
     finally : 
         session.commit()
@@ -95,12 +95,13 @@ def get_year_id(name):
     """
     session = create_session()
     try :
-        release_year_id = session.query(Release_years.id).filter(Release_years.release_year == name).scalar()
-        if release_year_id is not None:
-            return release_year_id
+        existing_row = session.query(Release_years.id).filter(Release_years.release_year == name).first()
+        if existing_row:
+            return existing_row.id
+        
         release_year = Release_years(release_year = name)
         session.add(release_year)
-        session.flush()        
+        session.commit()        
         return release_year.id
     finally : 
         session.commit()
@@ -125,7 +126,7 @@ def get_game_id(name):
             return game_id
         game = Games(game_name = name)
         session.add(game)
-        session.flush()        
+        session.commit()        
         return game.id
     finally : 
         session.close()
@@ -176,7 +177,7 @@ def existing_year():
     session = create_session()
     try :
         existing_years = {
-                p.release_year : p.id 
+                str(p.release_year) : p.id 
                 for p in session.query(Release_years).all() 
                 if p.release_year not in (None, '')
             }
@@ -194,14 +195,31 @@ def existing_platform():
     session = create_session()
     try :
         existing_platforms = {
-                str(p.platform_name).lower().strip() 
+                str(p.platform_name).lower().strip() : p.id
                 for p in session.query(Platforms).all()
                 if p.platform_name not in (None, '')
             }
         return existing_platforms
     finally : 
         session.close()
-    
+
+def existing_gameplatform():
+    """
+    Retrieve all game_platform id tupple currently stored in the database.
+
+    Returns:
+        dict[tuple[int,int], int]: A dictionary mapping game_platform id tupple to its database ID.
+    """
+    session = create_session()
+    try :
+        existing_gamesplatforms = {
+                (p.platform_id, p.game_id) : p.id 
+                for p in session.query(GamesPlatforms).all()
+            }
+        return existing_gamesplatforms
+    finally : 
+        session.close()
+
 def existing_game():
     """
     Retrieve all game names currently stored in the database.
