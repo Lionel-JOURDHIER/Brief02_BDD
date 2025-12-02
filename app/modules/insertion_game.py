@@ -44,7 +44,7 @@ def release_years_to_add(data: pd.DataFrame):
             continue
         if year not in seen_years:
             seen_years.add(year)
-            year_to_add = Release_years(release_year=row.Year)
+            year_to_add = Release_years(release_year=int(float(row.Year)))
             years_to_add.append(year_to_add)
     return years_to_add
 
