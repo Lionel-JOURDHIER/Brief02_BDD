@@ -7,7 +7,7 @@ class Countries(Base):
     __tablename__ = 'countries'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-    country_name = Column(EncryptedString())
+    country_name = Column(String)
    
     # relation 0-N
     cities = relationship("Cities", back_populates="country")  

@@ -7,8 +7,8 @@ class Contacts(Base):
     __tablename__ = 'contacts'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-    email = Column(EncryptedString())
-    mobile_phone = Column(EncryptedString())
+    email = Column(String)
+    mobile_phone = Column(String)
    
     # relation 0-N
     player = relationship("Players", back_populates="contact")  

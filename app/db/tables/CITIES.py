@@ -7,7 +7,7 @@ class Cities(Base):
     __tablename__ = 'cities'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-    city_name = Column(EncryptedString())
+    city_name = Column(String)
    
     # clé étrangère
     country_id = Column(Integer, ForeignKey('countries.id'), nullable=True)

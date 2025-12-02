@@ -16,8 +16,8 @@ class Players(Base):
         default=lambda: str(uuid.uuid4())
     )
 
-    first_name = Column(EncryptedString())
-    last_name = Column(EncryptedString())
+    first_name = Column(String)
+    last_name = Column(String)
     creation_date = Column(Date, server_default=func.current_date())
     
     # clé étrangères

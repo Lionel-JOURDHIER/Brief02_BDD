@@ -7,8 +7,8 @@ class Addresses(Base):
     __tablename__ = 'addresses'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-    address_number = Column(EncryptedString())
-    street_name = Column(EncryptedString())
+    address_number = Column(String)
+    street_name = Column(String)
     
     # clé étrangères
     street_type_id = Column(Integer, ForeignKey('street_types.id'), nullable=True)
