@@ -6,7 +6,12 @@ class GamesPlatforms(Base):
     __tablename__ = 'games_platforms'
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
-   
+    NA_sales = Column(Float(precision=2))
+    EU_sales = Column(Float(precision=2))
+    JP_sales = Column(Float(precision=2))
+    other_sales = Column(Float(precision=2))
+    global_sales =Column(Float(precision=2))
+    
     # clé étrangère
     game_id = Column(Integer, ForeignKey('games.id'), nullable=True)
     game = relationship("Games", back_populates="game_platform") 

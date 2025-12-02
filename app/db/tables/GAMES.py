@@ -7,12 +7,7 @@ class Games(Base):
     # clé primaire
     id = Column(Integer, primary_key=True, autoincrement=True)  
     game_name = Column(String)
-    NA_sales = Column(Float(precision=2))
-    EU_sales = Column(Float(precision=2))
-    JP_sales = Column(Float(precision=2))
-    other_sales = Column(Float(precision=2))
-    global_sales =Column(Float(precision=2))
-    
+     
     # clé étrangères
     release_year_id = Column(Integer, ForeignKey('release_years.id'), nullable=True)
     release_year = relationship("Release_years", back_populates="games") 

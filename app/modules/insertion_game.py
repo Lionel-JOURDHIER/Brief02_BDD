@@ -213,7 +213,8 @@ def games_to_add(data: pd.DataFrame):
     existing_genres = existing_genre()
     existing_years = existing_year()
     
-
+    #! il y a un bug dans cette fonction qui duplique les entrées. 
+    
     for row in data.itertuples():
         
         # --- Release_year ---
@@ -259,14 +260,9 @@ def games_to_add(data: pd.DataFrame):
             continue
 
         seen_games.add(str(game_name_low))
-
+        
         game_to_add = Games(
             game_name = row.Name,
-            NA_sales = row.NA_Sales,
-            EU_sales = row.EU_Sales,
-            JP_sales = row.JP_Sales,
-            other_sales = row.Other_Sales,
-            global_sales = row.Global_Sales,
             release_year_id = release_year_id,
             publisher_id = publisher_id,
             genre_id = genre_id
@@ -286,7 +282,15 @@ def games_plateform_to_add(data: pd.DataFrame):
         gp_tuple = (platform_id, game_id)
         if gp_tuple in existing_games_platforms :
             continue
-        gp = GamesPlatforms(game_id=game_id, platform_id=platform_id)
+        gp = GamesPlatforms(
+            game_id=game_id, 
+            platform_id=platform_id,
+            NA_sales = row.NA_Sales,
+            EU_sales = row.EU_Sales,
+            JP_sales = row.JP_Sales,
+            other_sales = row.Other_Sales,
+            global_sales = row.Global_Sales
+            )
         gps_to_add.append(gp)
     return gps_to_add
 
@@ -324,7 +328,7 @@ def games_all_to_db (data: pd.DataFrame):
             
         for i in platforms_to_add(data):
             session.add(i)
-        
+            
         for i in games_plateform_to_add(data):
             session.add(i)
             
