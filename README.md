@@ -44,6 +44,24 @@ La table de review qui fait le lien entre les deux :
 python main.py
 ```
 
+## RGPD
+Les informations stockée sont chiffrées avec une clé de chiffrage FERNET. 
+Pour les besoins du rendu la clé est en clair dans le ficher fernet.key. 
+
+***For educational purposes, the key may be stored in thr root directory, 
+but in production, store the key securely (e.g., in an environment variable or secure vault)
+to improve security.***
+
+Les informations globale comme le pays ou la ville n'ont pas été chiffrée pour des questions de lisibilité. 
+
+**Pour le respect complet de la RGPD l'utilisateur devra pouvoir supprimer ses données personnelles et 
+il faudra prévoir une suppression automatique.**
+
+## a ajouter : 
+Lire the data
+Update the database
+Delete one user
+
 ## Licence
 
 Projet interne -- libre d'utilisation.
