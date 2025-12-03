@@ -172,12 +172,13 @@ def platforms_to_add(data: pd.DataFrame):
     platforms_to_add = []
     seen_platforms = {"NULL", None, ""}
     existing_platforms = existing_platform()
+    existing_platforms_low = [p.strip().lower() for p in existing_platforms]
     for row in data_sorted.itertuples():
         platform = row.Platform
         if pd.isna(platform):
             continue
         platform_low = str(platform).strip().lower()
-        if platform_low in existing_platforms or platform_low in seen_platforms:  
+        if platform_low in existing_platforms_low or platform_low in seen_platforms:  
             continue
         seen_platforms.add(platform_low)
         platform_to_add = Platforms(platform_name=platform)

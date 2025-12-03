@@ -1,9 +1,9 @@
 import pandas as pd
 
-from app.db.tables import Players, Contacts, Addresses, Cities, Countries, Postal_codes, City_pc_corresps
+from app.db.tables import Players, Contacts, Addresses, Cities, Countries, Postal_codes, City_pc_corresps, Street_types
 from app.modules.encrypt import encrypt_string
 from app.modules.session import create_session
-from app.modules.get_player import existing_city_cp, get_city_id, get_pc_id
+from app.modules.get_player import existing_city_cp, get_city_id, get_pc_id, existing_city, existing_country, existing_street_type, existing_postal_code
 
 def players_to_add(data: pd.DataFrame):
     players_to_add = []
@@ -45,10 +45,10 @@ def addresses_to_add(data: pd.DataFrame):
 def cities_to_add(data: pd.DataFrame):
     cities_to_add = []
     seen_cities = set()
-    #! ADD CHECK CITIES 
+    existing_cities = existing_city() 
     for row in data.itertuples():
         city_name = row.city
-        if city_name not in seen_cities:
+        if city_name not in seen_cities and city_name not in existing_cities:
             seen_cities.add(city_name)
             city_to_add = Cities(
             city_name = (row.city),
@@ -60,10 +60,10 @@ def cities_to_add(data: pd.DataFrame):
 def countries_to_add(data: pd.DataFrame):
     countries_to_add = []
     seen_countries = set()
-    #! ADD CHECK COUNTRIES
+    existing_countries = existing_country()
     for row in data.itertuples():
         country_name = row.country
-        if country_name not in seen_countries:
+        if country_name not in seen_countries and country_name not in existing_countries:
             seen_countries.add(country_name)
             country_to_add = Countries(
                 country_name = (row.country),
@@ -74,16 +74,30 @@ def countries_to_add(data: pd.DataFrame):
 def postal_code_to_add(data : pd.DataFrame):
     pcs_to_add = []
     seen_pc = set()
-    #! ADD CHECK POSTAL CODE
+    existing_postal_codes = existing_postal_code()
     for row in data.itertuples():
         postal_code = row.postal_code
-        if postal_code not in seen_pc:
+        if postal_code not in seen_pc and postal_code not in existing_postal_codes:
             seen_pc.add(postal_code)
             pc_to_add = Postal_codes(
                 postal_code_value = row.postal_code,
                 )
             pcs_to_add.append(pc_to_add)
     return pcs_to_add
+
+def street_type_to_add(data : pd.DataFrame):
+    street_types_to_add = []
+    seen_street_type = set()
+    existing_street_types = existing_street_type()
+    for row in data.itertuples():
+        street_type = row.street_type
+        if street_type not in seen_street_type and street_type not in existing_street_types:
+            seen_street_type.add(street_type)
+            street_type_to_add = Street_types(
+                street_type_name = row.street_type,
+                )
+            street_types_to_add.append(street_type_to_add)
+    return street_types_to_add
 
 def city_cp_corresp_to_add(data : pd.DataFrame):
     city_cps_to_add = []
@@ -157,6 +171,8 @@ def insert_player_2 (data: pd.DataFrame):
             session.add(i)
         for i in postal_code_to_add(data):
             session.add(i)
+        for i in street_type_to_add(data):
+            session.add(i)
         session.commit()
     finally:
         session.close()
@@ -170,7 +186,7 @@ def insert_player_3 (data: pd.DataFrame):
     finally:
         session.close()
 
-def insert_player_3 (data: pd.DataFrame):
+def insert_player_4 (data: pd.DataFrame):
     try: 
         session = create_session()    
         for i in addresses_to_add(data):
@@ -181,7 +197,7 @@ def insert_player_3 (data: pd.DataFrame):
     finally:
         session.close()
 
-def insert_player_4 (data: pd.DataFrame):
+def insert_player_5 (data: pd.DataFrame):
     try: 
         session = create_session()    
         for i in players_to_add(data):
