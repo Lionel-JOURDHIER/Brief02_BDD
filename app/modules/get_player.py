@@ -36,7 +36,7 @@ def get_pc_id(name):
     """
     session = create_session()
     try :
-        Postal_code_id = session.query(Postal_codes.id).filter(Postal_codes.postal_code_value == name).scalar()
+        Postal_code_id = session.query(Postal_codes.id).filter(Postal_codes.postal_code_value == int(name)).scalar()
         if Postal_code_id is not None:
             return Postal_code_id
         Postal_code = Postal_codes(postal_code_value = name)

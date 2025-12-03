@@ -95,12 +95,12 @@ def city_cp_corresp_to_add(data : pd.DataFrame):
         postal_code_id = get_pc_id(row.postal_code)
         city_id = get_city_id(row.city)
         city_cp_tuple = (postal_code_id, city_id)
-        if city_cp_tuple in existing_city_cps :
+        if city_cp_tuple not in existing_city_cps :
             city_cp_to_add = City_pc_corresps(
                 postal_code_id = postal_code_id,
                 city_id = city_id
                 )
-            city_cps_to_add(city_cp_to_add)
+            city_cps_to_add.append(city_cp_to_add)
     return city_cps_to_add
 
 
