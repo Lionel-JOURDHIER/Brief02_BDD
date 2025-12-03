@@ -295,28 +295,11 @@ def games_plateform_to_add(data: pd.DataFrame):
     return gps_to_add
 
 
-def games_all_to_db (data: pd.DataFrame):
-    """
-    Insert all games-related data into the database in the correct order.
-
-    This function:
-      - Opens a database session
-      - Adds publishers, genres, release years, and platforms to the database first
-      - Adds games after the related foreign key objects have been inserted
-      - Commits the transaction and closes the session
-      - Ensures the session is closed even if an error occurs
-
-    Args:
-        data : pd.DataFrame
-            The DataFrame containing all game information, including columns for:
-            "Publisher", "Genre", "Year", "Platform", "Name", "Rank", 
-            "NA_Sales", "EU_Sales", "JP_Sales", "Other_Sales", "Global_Sales"
-
-    Returns:
-        None
-    """
-    session = create_session()
+def insert_game_1(data : pd.DataFrame):
     try: 
+        session = create_session()
+        init_bdd_game()
+
         for i in publishers_to_add(data):
             session.add(i)
 
@@ -329,6 +312,24 @@ def games_all_to_db (data: pd.DataFrame):
         for i in platforms_to_add(data):
             session.add(i)
             
+        session.commit()
+    finally:
+        session.close()
+
+def insert_game_2(data):
+    try: 
+        session = create_session()
+        
+        for i in games_to_add(data):
+            session.add(i)
+            
+        session.commit()
+    finally:
+        session.close()
+
+def insert_game_3(data):
+    try: 
+        session = create_session()
         for i in games_plateform_to_add(data):
             session.add(i)
             

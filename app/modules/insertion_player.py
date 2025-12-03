@@ -131,3 +131,61 @@ def players_all_to_db (data: pd.DataFrame):
         
     session.commit()
     session.close()
+
+def insert_player_1 (data: pd.DataFrame):
+    try: 
+        session = create_session()    
+        for i in countries_to_add(data):
+            session.add(i)
+        session.commit()
+    finally:
+        session.close()
+
+def insert_player_1 (data: pd.DataFrame):
+    try: 
+        session = create_session()    
+        for i in countries_to_add(data):
+            session.add(i)
+        session.commit()
+    finally:
+        session.close()
+
+def insert_player_2 (data: pd.DataFrame):
+    try: 
+        session = create_session()    
+        for i in cities_to_add(data):
+            session.add(i)
+        for i in postal_code_to_add(data):
+            session.add(i)
+        session.commit()
+    finally:
+        session.close()
+
+def insert_player_3 (data: pd.DataFrame):
+    try: 
+        session = create_session()    
+        for i in city_cp_corresp_to_add(data):
+            session.add(i)
+        session.commit()
+    finally:
+        session.close()
+
+def insert_player_3 (data: pd.DataFrame):
+    try: 
+        session = create_session()    
+        for i in addresses_to_add(data):
+            session.add(i)
+        for i in contacts_to_add(data):
+            session.add(i)
+        session.commit()
+    finally:
+        session.close()
+
+def insert_player_4 (data: pd.DataFrame):
+    try: 
+        session = create_session()    
+        for i in players_to_add(data):
+            session.add(i)
+        session.commit()
+    finally:
+        session.close()
