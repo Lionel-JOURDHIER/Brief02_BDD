@@ -3,9 +3,9 @@ from sqlalchemy.orm import sessionmaker
 from app.db.tables.base import Base
 
 
-# ENGINE = create_engine("sqlite:///ma_base_clients.db", echo=True)
+ENGINE = create_engine("sqlite:///ma_base_clients.db", echo=True)
 #! DB test à retirer pour prod
-ENGINE = create_engine("sqlite:///clients_test.db", echo=True)
+# ENGINE = create_engine("sqlite:///clients_test.db", echo=True)
 
 
 def create_session(engine = ENGINE):
